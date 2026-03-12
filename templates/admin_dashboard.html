@@ -1,0 +1,121 @@
+{% extends "admin_base.html" %}
+{% block title %}Dashboard — MedCare Admin{% endblock %}
+
+{% block content %}
+<div class="fade-up">
+  <div class="mb-8">
+    <h1 class="serif text-3xl text-gray-900">Dashboard</h1>
+    <p class="text-gray-400 mt-1">Overview of your hospital review system</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+    <div class="card p-6">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-gray-400 text-sm font-medium">Total Doctors</span>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background: #e8f4fd;">🩺</div>
+      </div>
+      <div class="text-4xl font-bold serif text-gray-900">{{ total_doctors }}</div>
+      <div class="mt-2"><a href="/admin/add-doctor" class="text-blue-600 text-sm hover:underline">+ Add new doctor</a></div>
+    </div>
+
+    <div class="card p-6">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-gray-400 text-sm font-medium">Total Reviews</span>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background: #f0fdf4;">⭐</div>
+      </div>
+      <div class="text-4xl font-bold serif text-gray-900">{{ total_reviews }}</div>
+      <div class="mt-2"><a href="/admin/manage-reviews" class="text-blue-600 text-sm hover:underline">View all reviews</a></div>
+    </div>
+
+    <div class="card p-6">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-gray-400 text-sm font-medium">Active Specialties</span>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background: #fff7ed;">🏥</div>
+      </div>
+      <div class="text-4xl font-bold serif text-gray-900">10</div>
+      <div class="mt-2"><span class="text-gray-400 text-sm">Medical departments</span></div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Doctors List -->
+    <div class="card p-6">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="serif text-xl text-gray-800">Doctors</h2>
+        <a href="/admin/add-doctor" class="btn-primary px-4 py-2 rounded-lg text-sm font-semibold">+ Add</a>
+      </div>
+
+      {% if doctors %}
+      <div class="space-y-3">
+        {% for doctor in doctors %}
+        <div class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
+          <div class="flex items-center gap-3">
+            {% if doctor.image %}
+            <img src="{{ doctor.image }}" class="w-10 h-10 rounded-xl object-cover" alt="{{ doctor.name }}" />
+            {% else %}
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm"
+                 style="background: linear-gradient(135deg, #1a6dff, #0d9488);">
+              {{ doctor.name[0] | upper }}
+            </div>
+            {% endif %}
+            <div>
+              <div class="font-semibold text-gray-800 text-sm">Dr. {{ doctor.name }}</div>
+              <div class="text-xs text-gray-400">{{ doctor.specialty }}</div>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <a href="/doctor/{{ doctor.id }}" class="text-xs text-blue-600 hover:underline">View</a>
+            <form method="post" action="/admin/delete-doctor/{{ doctor.id }}"
+                  onsubmit="return confirm('Delete Dr. {{ doctor.name }} and all their reviews?')">
+              <button type="submit" class="text-xs text-red-500 hover:underline">Delete</button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-10 text-gray-400">
+        <p>No doctors yet.</p>
+        <a href="/admin/add-doctor" class="text-blue-600 text-sm underline mt-1 inline-block">Add your first doctor</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Recent Reviews -->
+    <div class="card p-6">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="serif text-xl text-gray-800">Recent Reviews</h2>
+        <a href="/admin/manage-reviews" class="text-sm text-blue-600 hover:underline">View all</a>
+      </div>
+
+      {% if recent_reviews %}
+      <div class="space-y-4">
+        {% for review in recent_reviews %}
+        <div class="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="font-semibold text-gray-800 text-sm">{{ review.patient_name }}</div>
+              <div class="text-xs text-gray-400">for Dr. {{ review.doctor_name }}</div>
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="text-yellow-400">★</span>
+              <span class="text-sm font-bold text-gray-700">{{ review.rating }}</span>
+            </div>
+          </div>
+          {% if review.feedback %}
+          <p class="text-sm text-gray-500 mt-1 line-clamp-2">"{{ review.feedback }}"</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-10 text-gray-400">
+        <p>No reviews yet.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

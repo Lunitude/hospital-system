@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — MedCare</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    .serif { font-family: 'DM Serif Display', serif; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.5s ease forwards; }
+    .btn-primary {
+      background: linear-gradient(135deg, #1a6dff, #0d9488);
+      transition: all 0.25s;
+      box-shadow: 0 4px 15px rgba(26,109,255,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,109,255,0.45); }
+    input:focus { outline: none; border-color: #1a6dff; box-shadow: 0 0 0 3px rgba(26,109,255,0.12); }
+
+    .cross-icon {
+      width: 40px; height: 40px;
+      background: white;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .cross-icon::before, .cross-icon::after {
+      content: '';
+      position: absolute;
+      background: #1a6dff;
+      border-radius: 2px;
+    }
+    .cross-icon::before { width: 5px; height: 20px; }
+    .cross-icon::after { width: 20px; height: 5px; }
+  </style>
+</head>
+<body style="background: linear-gradient(135deg, #0a2540 0%, #1a3a5c 50%, #0d4a7a 100%); min-height: 100vh;"
+      class="flex items-center justify-center p-4">
+
+  <!-- Background pattern -->
+  <div class="fixed inset-0 opacity-5 pointer-events-none">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+        <path d="M 50 0 L 0 0 0 50" fill="none" stroke="white" stroke-width="1"/>
+      </pattern></defs>
+      <rect width="100%" height="100%" fill="url(#grid)" />
+    </svg>
+  </div>
+
+  <div class="w-full max-w-md fade-up relative z-10">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-3 mb-4">
+        <div class="cross-icon"></div>
+        <div class="text-left">
+          <div class="serif text-white text-2xl">MedCare</div>
+          <div class="text-blue-300 text-xs tracking-widest uppercase">Hospital System</div>
+        </div>
+      </div>
+      <h2 class="serif text-white text-3xl mt-4">Admin Portal</h2>
+      <p class="text-blue-300 text-sm mt-1">Authorized personnel only</p>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-white rounded-2xl shadow-2xl p-8">
+      {% if error %}
+      <div class="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-6 flex items-center gap-2">
+        <span>⚠️</span> {{ error }}
+      </div>
+      {% endif %}
+
+      <form method="post" action="/admin/login">
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+          <input type="text" name="username" required placeholder="Enter admin username"
+                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-800 transition-all" />
+        </div>
+        <div class="mb-7">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+          <input type="password" name="password" required placeholder="Enter password"
+                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-800 transition-all" />
+        </div>
+        <button type="submit" class="btn-primary w-full py-3.5 rounded-xl text-white font-semibold text-base">
+          Sign In to Dashboard
+        </button>
+      </form>
+
+      <div class="mt-6 pt-5 border-t border-gray-100 text-center">
+        <a href="/" class="text-sm text-blue-600 hover:text-blue-800 transition-colors">← Return to Hospital Website</a>
+      </div>
+    </div>
+
+    <!-- Default creds hint -->
+    <div class="mt-4 text-center">
+      <p class="text-blue-300 text-xs opacity-60">Default: admin / admin123</p>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}MedCare Hospital{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --navy: #0a2540;
+      --blue: #1a6dff;
+      --sky: #e8f4fd;
+      --teal: #0d9488;
+      --accent: #00c8aa;
+      --soft: #f0f7ff;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f8fbff; color: #0a2540; }
+    h1,h2,h3,.serif { font-family: 'DM Serif Display', serif; }
+
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #1a6dff 0%, #0d9488 100%);
+      color: white; border: none; cursor: pointer;
+      transition: all 0.25s; box-shadow: 0 4px 15px rgba(26,109,255,0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(26,109,255,0.4);
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 20px rgba(10,37,64,0.07);
+      transition: all 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(10,37,64,0.12);
+    }
+
+    .star { color: #fbbf24; }
+    .star-empty { color: #d1d5db; }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.5s ease forwards; }
+    .fade-up-2 { animation: fadeUp 0.5s 0.1s ease forwards; opacity: 0; }
+    .fade-up-3 { animation: fadeUp 0.5s 0.2s ease forwards; opacity: 0; }
+
+    .cross-icon {
+      width: 32px; height: 32px;
+      background: white;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .cross-icon::before, .cross-icon::after {
+      content: '';
+      position: absolute;
+      background: #1a6dff;
+      border-radius: 2px;
+    }
+    .cross-icon { position: relative; }
+    .cross-icon::before { width: 4px; height: 16px; }
+    .cross-icon::after { width: 16px; height: 4px; }
+
+    .sidebar-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 10px;
+      color: #64748b; font-weight: 500;
+      transition: all 0.2s;
+    }
+    .sidebar-link:hover, .sidebar-link.active {
+      background: var(--sky);
+      color: var(--blue);
+    }
+
+    input, select, textarea {
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #1a6dff;
+      box-shadow: 0 0 0 3px rgba(26,109,255,0.12);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav style="background: var(--navy);" class="sticky top-0 z-50 shadow-lg">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3">
+      <div class="cross-icon flex-shrink-0"></div>
+      <div>
+        <span class="serif text-white text-xl font-bold">MedCare</span>
+        <span class="text-xs text-blue-300 block -mt-1 tracking-widest uppercase">Hospital</span>
+      </div>
+    </a>
+    <div class="flex items-center gap-6">
+      <a href="/" class="nav-link text-blue-200 hover:text-white text-sm font-medium transition-colors">Doctors</a>
+      <a href="/admin/login" class="btn-primary px-5 py-2 rounded-full text-sm font-semibold">Admin Portal</a>
+    </div>
+  </div>
+</nav>
+
+{% block content %}{% endblock %}
+
+<!-- FOOTER -->
+<footer style="background: var(--navy);" class="mt-20 py-10">
+  <div class="max-w-7xl mx-auto px-6 text-center">
+    <div class="flex items-center justify-center gap-3 mb-3">
+      <div class="cross-icon flex-shrink-0"></div>
+      <span class="serif text-white text-lg">MedCare Hospital</span>
+    </div>
+    <p class="text-blue-300 text-sm">Trusted care. Expert doctors. Your health, our mission.</p>
+    <p class="text-blue-400 text-xs mt-4">© 2024 MedCare Hospital System. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>

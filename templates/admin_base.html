@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Admin — MedCare{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    .serif { font-family: 'DM Serif Display', serif; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 14px; border-radius: 10px;
+      color: #94a3b8; font-size: 0.875rem; font-weight: 500;
+      transition: all 0.2s;
+    }
+    .sidebar-link:hover { background: rgba(255,255,255,0.08); color: white; }
+    .sidebar-link.active { background: rgba(26,109,255,0.2); color: #60a5fa; }
+    .btn-primary {
+      background: linear-gradient(135deg, #1a6dff, #0d9488);
+      color: white; transition: all 0.25s;
+      box-shadow: 0 4px 12px rgba(26,109,255,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(26,109,255,0.4); }
+    .card { background: white; border-radius: 14px; box-shadow: 0 2px 16px rgba(10,37,64,0.07); }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: #1a6dff;
+      box-shadow: 0 0 0 3px rgba(26,109,255,0.12);
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.4s ease forwards; }
+
+    .cross-icon {
+      width: 32px; height: 32px;
+      background: white; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; flex-shrink: 0;
+    }
+    .cross-icon::before, .cross-icon::after {
+      content: ''; position: absolute;
+      background: #1a6dff; border-radius: 2px;
+    }
+    .cross-icon::before { width: 4px; height: 16px; }
+    .cross-icon::after { width: 16px; height: 4px; }
+  </style>
+</head>
+<body class="bg-gray-50 flex min-h-screen">
+
+<!-- SIDEBAR -->
+<aside style="background: #0a2540; min-height: 100vh;" class="w-60 flex-shrink-0 sticky top-0 h-screen flex flex-col">
+  <!-- Logo -->
+  <div class="p-5 border-b border-white border-opacity-10">
+    <a href="/" class="flex items-center gap-3">
+      <div class="cross-icon"></div>
+      <div>
+        <div class="serif text-white text-base">MedCare</div>
+        <div class="text-blue-400 text-xs">Admin Panel</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Nav -->
+  <nav class="p-4 flex-1 space-y-1">
+    <p class="text-blue-500 text-xs font-semibold uppercase tracking-wider px-3 mb-3">Management</p>
+    <a href="/admin/dashboard" class="sidebar-link {% if request.url.path == '/admin/dashboard' %}active{% endif %}">
+      <span>📊</span> Dashboard
+    </a>
+    <a href="/admin/add-doctor" class="sidebar-link {% if request.url.path == '/admin/add-doctor' %}active{% endif %}">
+      <span>➕</span> Add Doctor
+    </a>
+    <a href="/admin/manage-reviews" class="sidebar-link {% if request.url.path == '/admin/manage-reviews' %}active{% endif %}">
+      <span>⭐</span> Manage Reviews
+    </a>
+    <div class="border-t border-white border-opacity-10 my-4"></div>
+    <a href="/" class="sidebar-link">
+      <span>🏥</span> View Website
+    </a>
+    <a href="/admin/logout" class="sidebar-link text-red-400 hover:bg-red-900 hover:bg-opacity-30 hover:text-red-300">
+      <span>🚪</span> Sign Out
+    </a>
+  </nav>
+
+  <!-- User badge -->
+  <div class="p-4 border-t border-white border-opacity-10">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">A</div>
+      <div>
+        <div class="text-white text-sm font-medium">Administrator</div>
+        <div class="text-blue-400 text-xs">Super Admin</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 overflow-auto">
+  <div class="max-w-6xl mx-auto px-8 py-8">
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+</body>
+</html>

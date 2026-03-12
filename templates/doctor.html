@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Dr. {{ doctor.name }} — MedCare Hospital{% endblock %}
+
+{% block content %}
+
+{% if request.query_params.get('reviewed') %}
+<div style="background: #d1fae5;" class="border border-green-400 text-green-800 px-6 py-3 text-center text-sm font-medium">
+  ✅ Thank you! Your review has been submitted successfully.
+</div>
+{% endif %}
+
+<!-- Profile Header -->
+<section style="background: linear-gradient(135deg, #0a2540 0%, #1a3a5c 100%);" class="py-12">
+  <div class="max-w-5xl mx-auto px-6">
+    <a href="/" class="inline-flex items-center gap-2 text-blue-300 hover:text-white text-sm mb-6 transition-colors">
+      ← Back to all doctors
+    </a>
+    <div class="flex flex-col md:flex-row items-start md:items-center gap-6 fade-up">
+      <!-- Avatar -->
+      {% if doctor.image %}
+      <img src="{{ doctor.image }}" alt="{{ doctor.name }}"
+           class="w-28 h-28 rounded-3xl object-cover shadow-xl border-4 border-white border-opacity-20" />
+      {% else %}
+      <div class="w-28 h-28 rounded-3xl flex items-center justify-center text-4xl font-bold text-white shadow-xl"
+           style="background: linear-gradient(135deg, #1a6dff, #0d9488);">
+        {{ doctor.name[0] | upper }}
+      </div>
+      {% endif %}
+
+      <div class="flex-1">
+        <span class="badge mb-2" style="background: rgba(26,109,255,0.3); color: #93c5fd; border: 1px solid rgba(26,109,255,0.4);">
+          {{ doctor.specialty }}
+        </span>
+        <h1 class="serif text-3xl md:text-4xl text-white mb-2">Dr. {{ doctor.name }}</h1>
+        <div class="flex items-center gap-3">
+          <div class="flex">
+            {% for i in range(1, 6) %}
+              {% if i <= doctor.avg_rating | int %}
+                <span class="star text-xl">★</span>
+              {% else %}
+                <span class="star-empty text-xl">★</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <span class="text-white font-bold text-xl">
+            {% if doctor.avg_rating %}{{ doctor.avg_rating }}{% else %}No ratings yet{% endif %}
+          </span>
+          {% if doctor.avg_rating %}<span class="text-blue-300">/ 5</span>{% endif %}
+          <span class="text-blue-300 text-sm">· {{ doctor.total_reviews }} review{% if doctor.total_reviews != 1 %}s{% endif %}</span>
+        </div>
+      </div>
+
+      <a href="/review/{{ doctor.id }}"
+         class="btn-primary px-6 py-3 rounded-xl font-semibold text-sm flex-shrink-0">
+        ✍️ Write a Review
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Content -->
+<div class="max-w-5xl mx-auto px-6 py-10">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- Sidebar: Rating Breakdown -->
+    <div class="lg:col-span-1">
+      <div class="card p-6 fade-up">
+        <h3 class="serif text-lg text-gray-800 mb-4">Rating Breakdown</h3>
+        {% if doctor.total_reviews > 0 %}
+        <div class="text-center mb-6">
+          <div class="text-5xl font-bold serif text-gray-900">{{ doctor.avg_rating }}</div>
+          <div class="flex justify-center mt-2">
+            {% for i in range(1, 6) %}
+              {% if i <= doctor.avg_rating | int %}
+                <span class="star text-2xl">★</span>
+              {% else %}
+                <span class="star-empty text-2xl">★</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <p class="text-gray-400 text-sm mt-1">out of 5</p>
+        </div>
+
+        {% for star in [5, 4, 3, 2, 1] %}
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-sm text-gray-500 w-4">{{ star }}</span>
+          <span class="star text-sm">★</span>
+          <div class="flex-1 bg-gray-100 rounded-full h-2">
+            {% set pct = ((breakdown[star] / doctor.total_reviews) * 100) | int if doctor.total_reviews else 0 %}
+            <div class="h-2 rounded-full" style="width: {{ pct }}%; background: linear-gradient(90deg, #fbbf24, #f59e0b);"></div>
+          </div>
+          <span class="text-xs text-gray-400 w-5">{{ breakdown[star] }}</span>
+        </div>
+        {% endfor %}
+
+        {% else %}
+        <div class="text-center py-8 text-gray-400">
+          <div class="text-4xl mb-2">⭐</div>
+          <p class="text-sm">No reviews yet</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Reviews List -->
+    <div class="lg:col-span-2">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="serif text-2xl text-gray-800">Patient Reviews</h2>
+        <span class="text-gray-400 text-sm">{{ reviews|length }} review{% if reviews|length != 1 %}s{% endif %}</span>
+      </div>
+
+      {% if reviews %}
+      <div class="space-y-4">
+        {% for review in reviews %}
+        <div class="card p-5 fade-up" style="animation-delay: {{ loop.index0 * 0.05 }}s; opacity: 0;">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+                   style="background: linear-gradient(135deg, #1a6dff, #0d9488);">
+                {{ review.patient_name[0] | upper }}
+              </div>
+              <div>
+                <div class="font-semibold text-gray-800">{{ review.patient_name }}</div>
+                <div class="text-xs text-gray-400">
+                  {{ review.created_at.strftime('%B %d, %Y') if review.created_at else 'Recently' }}
+                </div>
+              </div>
+            </div>
+            <div class="flex">
+              {% for i in range(1, 6) %}
+                {% if i <= review.rating %}
+                  <span class="star">★</span>
+                {% else %}
+                  <span class="star-empty">★</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% if review.feedback %}
+          <p class="mt-3 text-gray-600 text-sm leading-relaxed pl-13" style="padding-left: 52px;">
+            "{{ review.feedback }}"
+          </p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      {% else %}
+      <div class="card p-12 text-center">
+        <div class="text-5xl mb-4">💬</div>
+        <h3 class="serif text-xl text-gray-600 mb-2">No reviews yet</h3>
+        <p class="text-gray-400 text-sm mb-6">Be the first to share your experience with Dr. {{ doctor.name }}</p>
+        <a href="/review/{{ doctor.id }}" class="btn-primary px-6 py-3 rounded-xl text-sm font-semibold inline-block">
+          Write First Review
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
